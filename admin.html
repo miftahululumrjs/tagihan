@@ -9,85 +9,83 @@
         .bg-nu-green { background-color: #006400; }
         .text-nu-green { color: #006400; }
         .bg-nu-gold { background-color: #D4AF37; }
-        .border-nu-gold { border-color: #D4AF37; }
+        body { background-color: #f0f4f0; }
     </style>
 </head>
-<body class="bg-green-50 min-h-screen font-sans">
+<body class="min-h-screen font-sans">
     <div class="max-w-md mx-auto p-4">
         
         <div class="text-center py-6">
-            <img src="logo-pesantren.png" alt="Logo Pesantren" class="h-20 mx-auto mb-3 drop-shadow-md" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_Nahdlatul_Ulama.png/600px-Logo_Nahdlatul_Ulama.png';">
+            <img src="logo-pesantren.png" alt="Logo" class="h-16 mx-auto mb-2" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_Nahdlatul_Ulama.png/600px-Logo_Nahdlatul_Ulama.png';">
             <h1 class="text-xl font-black text-green-900 leading-tight uppercase">Pondok Pesantren<br>Miftahul Ulum</h1>
-            <p class="text-[10px] text-green-700 font-medium uppercase tracking-widest mt-1">Desa Rajasinga - Terisi - Indramayu</p>
-            <div class="h-1 w-20 bg-nu-gold mx-auto mt-2 rounded-full"></div>
+            <div class="h-1 w-12 bg-nu-gold mx-auto mt-2 rounded-full"></div>
         </div>
 
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border-t-4 border-nu-green">
+        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100">
             <div class="bg-nu-green p-4 text-white text-center">
-                <h2 class="font-bold tracking-widest text-sm uppercase">Sistem Bayar Cash</h2>
+                <h2 class="font-bold tracking-widest text-xs uppercase">Sistem Bayar Cash</h2>
             </div>
             
-            <div class="p-6 space-y-4">
-                <div class="grid grid-cols-2 gap-3">
+            <div class="p-6 space-y-5">
+                <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1 tracking-tighter">PIN Admin</label>
-                        <input type="password" id="admin_pin" class="w-full border-2 border-slate-100 p-2.5 rounded-xl focus:border-nu-green outline-none text-center font-bold" placeholder="******">
+                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-1">PIN Otoritas</label>
+                        <input type="password" id="admin_pin" class="w-full bg-slate-50 border-2 border-slate-100 p-3 rounded-2xl focus:border-nu-green outline-none text-center font-bold" placeholder="****">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1 tracking-tighter">Petugas Shift</label>
-                        <select id="nama_bendahara" class="w-full border-2 border-slate-100 p-2.5 rounded-xl focus:border-nu-green outline-none font-bold bg-slate-50 text-xs">
+                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-1">Bendahara</label>
+                        <select id="nama_bendahara" class="w-full bg-slate-50 border-2 border-slate-100 p-3 rounded-2xl focus:border-nu-green outline-none font-bold text-xs">
                             <option value="Bendahara 1">Bendahara 1</option>
                             <option value="Bendahara 2">Bendahara 2</option>
                         </select>
                     </div>
                 </div>
 
-                <hr class="border-dashed">
+                <div class="h-px bg-slate-100"></div>
 
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">ID Santri</label>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase mb-1 text-center">Identitas Santri</label>
                     <div class="flex gap-2">
-                        <input type="text" id="id_santri" class="flex-1 border-2 border-slate-100 p-3 rounded-xl focus:border-nu-green outline-none font-bold text-center bg-yellow-50" placeholder="ID Santri">
-                        <button onclick="cariNama()" class="bg-slate-200 px-4 rounded-xl text-[10px] font-bold hover:bg-slate-300">CEK</button>
+                        <input type="text" id="id_santri" class="flex-1 bg-yellow-50 border-2 border-yellow-100 p-3 rounded-2xl focus:border-nu-green outline-none font-bold text-center text-lg" placeholder="ID SANTRI">
+                        <button onclick="cariNama()" class="bg-nu-green text-white px-5 rounded-2xl text-[10px] font-bold hover:bg-green-800 transition">CEK</button>
                     </div>
-                    <p id="display_nama" class="mt-2 text-center font-bold text-nu-green text-sm italic"></p>
+                    <p id="display_nama" class="mt-2 text-center font-black text-nu-green text-sm h-5"></p>
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Nominal Tunai</label>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase mb-1 text-center">Nominal Pembayaran</label>
                     <div class="relative">
-                        <span class="absolute left-4 top-3 font-bold text-nu-green text-lg">Rp</span>
-                        <input type="number" id="cash_amount" class="w-full border-2 border-slate-100 p-3 pl-12 rounded-xl text-xl font-black text-nu-green outline-none focus:border-nu-green text-center" placeholder="0">
+                        <span class="absolute left-4 top-3.5 font-bold text-nu-green">Rp</span>
+                        <input type="number" id="cash_amount" class="w-full border-2 border-slate-100 p-4 pl-12 rounded-2xl text-2xl font-black text-nu-green outline-none focus:border-nu-green text-center shadow-inner" placeholder="0">
                     </div>
                 </div>
 
-                <button onclick="prosesBayarCash()" id="btn-proses" class="w-full bg-nu-green text-white font-bold py-4 rounded-xl hover:bg-green-800 shadow-lg transition-all uppercase tracking-widest text-sm">
+                <button onclick="prosesBayarCash()" id="btn-proses" class="w-full bg-nu-green text-white font-bold py-5 rounded-2xl hover:shadow-xl hover:-translate-y-1 transition-all uppercase tracking-widest text-sm">
                     Simpan & Cetak Struk
                 </button>
             </div>
         </div>
 
-        <div class="mt-4 flex gap-2">
-            <button onclick="cekLaporanShift()" class="flex-1 border-2 border-nu-green text-nu-green font-bold py-3 rounded-xl hover:bg-green-50 transition-all text-[10px] uppercase tracking-widest">
-                Rekap Kas Shift
+        <div class="mt-6 flex flex-col gap-3">
+            <button onclick="cekLaporanShift()" class="w-full bg-white border-2 border-nu-green text-nu-green font-bold py-3 rounded-2xl hover:bg-green-50 transition-all text-[10px] uppercase tracking-widest">
+                Rekap Kas Shift Hari Ini
             </button>
-            <button onclick="location.href='index.html'" class="bg-slate-500 text-white px-4 rounded-xl text-[10px] font-bold uppercase">Web Portal</button>
+            <button onclick="location.href='index.html'" class="text-center text-slate-400 text-[10px] font-bold uppercase tracking-widest hover:text-nu-green">Kembali ke Portal Utama</button>
         </div>
 
-        <div class="text-center mt-8 pb-4">
-            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">© 2026 pinggirx.com</p>
+        <div class="text-center mt-10 pb-6">
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">© 2026 Miftahul Ulum • pinggirx.com</p>
         </div>
     </div>
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbxLRWBIJIKaeohFN9zWmeO05tQlU9_DO_sghEGsuw39vK14MqSWR-0JibwnplsjFuTf/exec"; // GANTI DENGAN URL WEB APP ANDA
         const PIN_RAHASIA = "jirolupatma"; // GANTI PIN ANDA
-        let NAMA_SANTRI_GLOBAL = ""; // Untuk menampung nama buat struk
+        let NAMA_SANTRI_GLOBAL = "";
 
-        // Fungsi mencocokkan Nama Santri sebelum bayar
         async function cariNama() {
             const id = document.getElementById('id_santri').value;
-            if(!id) return alert("Isi ID dulu");
+            if(!id) return alert("Masukkan ID Santri");
             document.getElementById('display_nama').innerText = "Mencari...";
             
             try {
@@ -95,13 +93,12 @@
                 const result = await response.json();
                 if(result.nama) {
                     NAMA_SANTRI_GLOBAL = result.nama;
-                    document.getElementById('display_nama').innerText = "Nama: " + result.nama;
+                    document.getElementById('display_nama').innerText = result.nama;
                 } else {
-                    document.getElementById('display_nama').innerText = "ID Tidak Ditemukan";
+                    document.getElementById('display_nama').innerText = "ID TIDAK DITEMUKAN";
+                    NAMA_SANTRI_GLOBAL = "";
                 }
-            } catch (e) {
-                document.getElementById('display_nama').innerText = "";
-            }
+            } catch (e) { document.getElementById('display_nama').innerText = ""; }
         }
 
         async function prosesBayarCash() {
@@ -112,11 +109,11 @@
             const btn = document.getElementById('btn-proses');
 
             if (pin !== PIN_RAHASIA) return alert("PIN Admin Salah!");
-            if (!id || !amount || !NAMA_SANTRI_GLOBAL) return alert("Lengkapi data dan Klik CEK dulu!");
+            if (!id || !amount || !NAMA_SANTRI_GLOBAL) return alert("Pastikan ID valid dan klik CEK!");
 
-            if (!confirm(`Terima tunai Rp ${Number(amount).toLocaleString('id-ID')} dari ${NAMA_SANTRI_GLOBAL}?`)) return;
+            if (!confirm(`Simpan pembayaran Rp ${Number(amount).toLocaleString('id-ID')} dari ${NAMA_SANTRI_GLOBAL}?`)) return;
 
-            btn.innerText = "Mencatat...";
+            btn.innerText = "MENYIMPAN...";
             btn.disabled = true;
 
             try {
@@ -137,50 +134,65 @@
                 } else {
                     alert("Gagal: " + result.msg);
                 }
-            } catch (e) {
-                alert("Kesalahan koneksi.");
-            } finally {
-                btn.innerText = "Simpan & Cetak Struk";
-                btn.disabled = false;
-            }
+            } catch (e) { alert("Error koneksi"); }
+            finally { btn.innerText = "Simpan & Cetak Struk"; btn.disabled = false; }
         }
 
         function cetakStruk(id, nama, amount, bendahara) {
-            const tgl = new Date().toLocaleString('id-ID');
-            const strukHTML = `
-                <div style="font-family: monospace; width: 280px; padding: 10px; border: 1px dashed #000; font-size: 12px;">
-                    <center>
-                        <strong style="font-size: 14px;">PONDOK PESANTREN<br>MIFTAHUL ULUM</strong><br>
-                        Desa Rajasinga - Indramayu<br>
-                        ----------------------------<br>
-                        <strong>STRUK PEMBAYARAN TUNAI</strong><br>
-                        ----------------------------
-                    </center>
-                    Tgl  : ${tgl}<br>
-                    ID   : ${id}<br>
-                    Nama : ${nama}<br>
-                    Nom  : Rp ${Number(amount).toLocaleString('id-ID')}<br>
-                    Oleh : ${bendahara}<br>
-                    ----------------------------<br>
-                    <center>SYUKRON - ALHAMDULILLAH<br><em>Bukti Sah Pembayaran</em><br>pinggirx.com</center>
-                </div>
-            `;
+            const tgl = new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+            const waktu = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            
             const win = window.open('', '_blank');
-            win.document.write(strukHTML);
+            win.document.write(`
+                <html>
+                <head>
+                    <style>
+                        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; padding: 10px; }
+                        .ticket { width: 300px; border: 1px solid #f2f2f2; padding: 15px; border-radius: 15px; margin: auto; }
+                        .header { text-align: center; margin-bottom: 20px; }
+                        .header h1 { margin: 0; font-size: 16px; color: #006400; text-transform: uppercase; }
+                        .header p { margin: 2px 0; font-size: 9px; color: #999; }
+                        .amount-box { background: #f8faf8; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 20px; border: 1px solid #eef2ee; }
+                        .amount-label { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+                        .amount-val { font-size: 20px; font-weight: 900; color: #006400; margin-top: 5px; }
+                        .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f9f9f9; font-size: 11px; }
+                        .info-label { color: #999; }
+                        .info-val { font-weight: bold; }
+                        .footer { text-align: center; margin-top: 20px; font-size: 9px; color: #ccc; }
+                        @media print { .no-print { display: none; } }
+                    </style>
+                </head>
+                <body onload="window.print()">
+                    <div class="ticket">
+                        <div class="header">
+                            <h1>PP. Miftahul Ulum</h1>
+                            <p>Desa Rajasinga - Terisi - Indramayu</p>
+                        </div>
+                        <div class="amount-box">
+                            <div class="amount-label">Total Bayar Tunai</div>
+                            <div class="amount-val">Rp ${Number(amount).toLocaleString('id-ID')}</div>
+                        </div>
+                        <div class="info-row"><span class="info-label">Nama Santri</span><span class="info-val">${nama}</span></div>
+                        <div class="info-row"><span class="info-label">ID Santri</span><span class="info-val">${id}</span></div>
+                        <div class="info-row"><span class="info-label">Tanggal</span><span class="info-val">${tgl} - ${waktu}</span></div>
+                        <div class="info-row"><span class="info-label">Metode</span><span class="info-val" style="color:#006400">LUNAS (CASH)</span></div>
+                        <div class="info-row" style="border:0"><span class="info-label">Admin By</span><span class="info-val">${bendahara}</span></div>
+                        <div class="footer">Syukron Jazakumullah Khairan<br>Bukti pembayaran sah - SI-SANTRI</div>
+                    </div>
+                </body>
+                </html>
+            `);
             win.document.close();
-            win.focus();
-            setTimeout(() => { win.print(); win.close(); }, 500);
         }
 
         async function cekLaporanShift() {
             const pin = document.getElementById('admin_pin').value;
             const bendahara = document.getElementById('nama_bendahara').value;
             if (pin !== PIN_RAHASIA) return alert("Masukkan PIN!");
-
             try {
                 const response = await fetch(`${API_URL}?action=report&bendahara=${bendahara}`);
                 const result = await response.json();
-                alert(`LAPORAN KAS SHIFT\n------------------\nPetugas: ${bendahara}\nTotal Kas: Rp ${result.total.toLocaleString('id-ID')}\n------------------\nSilakan setorkan uang ke bendahara utama.`);
+                alert(`LAPORAN KAS SHIFT\n------------------\nPetugas: ${bendahara}\nTotal Kas: Rp ${result.total.toLocaleString('id-ID')}\n------------------\nSetorkan uang tunai sejumlah di atas.`);
             } catch (e) { alert("Gagal mengambil laporan."); }
         }
     </script>
