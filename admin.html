@@ -12,7 +12,7 @@
         body { background-color: #f0f4f0; }
     </style>
 </head>
-<body class="min-h-screen font-sans">
+<body class="min-h-screen font-sans text-slate-700">
     <div class="max-w-md mx-auto p-4">
         
         <div class="text-center py-6">
@@ -23,7 +23,7 @@
 
         <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100">
             <div class="bg-nu-green p-4 text-white text-center">
-                <h2 class="font-bold tracking-widest text-xs uppercase">Sistem Bayar Cash</h2>
+                <h2 class="font-bold tracking-widest text-xs uppercase text-white">Sistem Bayar Cash</h2>
             </div>
             
             <div class="p-6 space-y-5">
@@ -70,258 +70,56 @@
             <button onclick="cekLaporanShift()" class="w-full bg-white border-2 border-nu-green text-nu-green font-bold py-3 rounded-2xl hover:bg-green-50 transition-all text-[10px] uppercase tracking-widest">
                 Rekap Kas Shift Hari Ini
             </button>
-            <button onclick="location.href='index.html'" class="text-center text-slate-400 text-[10px] font-bold uppercase tracking-widest hover:text-nu-green">Kembali ke Portal Utama</button>
+            <button onclick="location.href='index.html'" class="text-center text-slate-400 text-[10px] font-bold uppercase tracking-widest hover:text-nu-green italic">Kembali ke Portal Utama</button>
         </div>
 
         <div class="text-center mt-10 pb-6">
-            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">© 2026 pinggirX.com</p>
+            <p class="text-[10px] text-slate-400 font-bold tracking-widest uppercase">
+                © 2026 <span style="text-transform: none !important; font-family: sans-serif;" class="text-green-800">pinggirX.com</span>
+            </p>
         </div>
     </div>
 
     <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbw6VXiM3bIAp8-9vsuXNyLB-6Qb9h_e4IAeV-RFvUyib4MIjykYt4UFYu_OSVeBTp-w/exec"; 
-    const PIN_RAHASIA = "jirolupatma"; 
-    let NAMA_SANTRI_GLOBAL = "";
+        const API_URL = "https://script.google.com/macros/s/AKfycbw6VXiM3bIAp8-9vsuXNyLB-6Qb9h_e4IAeV-RFvUyib4MIjykYt4UFYu_OSVeBTp-w/exec"; 
+        const PIN_RAHASIA = "jirolupatma"; 
+        let NAMA_SANTRI_GLOBAL = "";
 
-    async function cariNama() {
-        const id = document.getElementById('id_santri').value;
-        if(!id) return alert("Masukkan ID Santri");
-        document.getElementById('display_nama').innerText = "Mencari...";
-        try {
-            const response = await fetch(`${API_URL}?action=login&id_santri=${id}&pin=ADMIN_BYPASS`);
-            const result = await response.json();
-            if(result.nama) {
-                NAMA_SANTRI_GLOBAL = result.nama;
-                document.getElementById('display_nama').innerText = result.nama;
-            } else {
-                document.getElementById('display_nama').innerText = "ID TIDAK DITEMUKAN";
-                NAMA_SANTRI_GLOBAL = "";
-            }
-        } catch (e) { document.getElementById('display_nama').innerText = ""; }
-    }
-
-    async function prosesBayarCash() {
-        const pin = document.getElementById('admin_pin').value;
-        const id = document.getElementById('id_santri').value;
-        const amount = document.getElementById('cash_amount').value;
-        const bendahara = document.getElementById('nama_bendahara').value;
-        const btn = document.getElementById('btn-proses');
-
-        if (pin !== PIN_RAHASIA) return alert("PIN Admin Salah!");
-        if (!id || !amount || !NAMA_SANTRI_GLOBAL) return alert("Pastikan ID valid dan klik CEK!");
-        if (!confirm(`Simpan pembayaran Rp ${Number(amount).toLocaleString('id-ID')} dari ${NAMA_SANTRI_GLOBAL}?`)) return;
-
-        btn.innerText = "MENYIMPAN...";
-        btn.disabled = true;
-
-        try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'pay_cash', id_santri: id, amount: amount, bendahara: bendahara })
-            });
-            const result = await response.json();
-            if(result.status === "success") {
-                cetakStruk(id, NAMA_SANTRI_GLOBAL, amount, bendahara);
-                location.reload();
-            } else {
-                alert("Gagal: " + result.msg);
-            }
-        } catch (e) { alert("Error koneksi"); }
-        finally { btn.innerText = "Simpan & Cetak Struk"; btn.disabled = false; }
-    }
-
-    function cetakStruk(id, nama, amount, bendahara) {
-        const tgl = new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
-        const waktu = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-        const win = window.open('', '_blank');
-        win.document.write(`
-            <html>
-            <head>
-                <style>
-                    body { font-family: 'Segoe UI', sans-serif; color: #333; padding: 10px; }
-                    .ticket { width: 300px; border: 1px solid #f2f2f2; padding: 15px; border-radius: 15px; margin: auto; }
-                    .header { text-align: center; margin-bottom: 20px; }
-                    .header h1 { margin: 0; font-size: 16px; color: #006400; text-transform: uppercase; }
-                    .header p { margin: 2px 0; font-size: 9px; color: #999; }
-                    .amount-box { background: #f8faf8; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 20px; border: 1px solid #eef2ee; }
-                    .amount-label { font-size: 9px; color: #888; text-transform: uppercase; }
-                    .amount-val { font-size: 20px; font-weight: 900; color: #006400; margin-top: 5px; }
-                    .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f9f9f9; font-size: 11px; }
-                    .info-val { font-weight: bold; }
-                    .footer { text-align: center; margin-top: 20px; font-size: 9px; color: #ccc; }
-                </style>
-            </head>
-            <body onload="window.print()">
-                <div class="ticket">
-                    <div class="header"><h1>PP. Miftahul Ulum</h1><p>Desa Rajasinga - Terisi - Indramayu</p></div>
-                    <div class="amount-box"><div class="amount-label">Total Bayar Tunai</div><div class="amount-val">Rp ${Number(amount).toLocaleString('id-ID')}</div></div>
-                    <div class="info-row"><span>Nama Santri</span><span class="info-val">${nama}</span></div>
-                    <div class="info-row"><span>ID Santri</span><span class="info-val">${id}</span></div>
-                    <div class="info-row"><span>Tanggal</span><span class="info-val">${tgl} - ${waktu}</span></div>
-                    <div class="info-row"><span>Metode</span><span class="info-val" style="color:#006400">LUNAS (CASH)</span></div>
-                    <div class="info-row" style="border:0"><span>Admin By</span><span class="info-val">${bendahara}</span></div>
-                    <div class="footer">
-                        Syukron Jazakumullah Khairan<br>
-                        Bukti pembayaran sah - SI-SANTRI<br>
-                        <span style="text-transform: none !important;">pinggirX.com</span>
-                    </div>
-                </div>
-            </body>
-            </html>
-        `);
-        win.document.close();
-    }
-
-    async function cekLaporanShift() {
-        const pin = document.getElementById('admin_pin').value;
-        const bendahara = document.getElementById('nama_bendahara').value;
-        if (pin !== PIN_RAHASIA) return alert("Masukkan PIN untuk cek laporan!");
-        
-        try {
-            const response = await fetch(`${API_URL}?action=report&bendahara=${encodeURIComponent(bendahara)}`);
-            const result = await response.json();
-            if (result.total !== undefined) {
-                cetakLaporanShift(bendahara, result.total);
-            } else {
-                alert("Data tidak ditemukan.");
-            }
-        } catch (e) {
-            alert("Gagal terhubung ke server.");
+        async function cariNama() {
+            const id = document.getElementById('id_santri').value;
+            if(!id) return alert("Masukkan ID Santri");
+            document.getElementById('display_nama').innerText = "Mencari...";
+            try {
+                const response = await fetch(`${API_URL}?action=login&id_santri=${id}&pin=ADMIN_BYPASS`);
+                const result = await response.json();
+                if(result.nama) {
+                    NAMA_SANTRI_GLOBAL = result.nama;
+                    document.getElementById('display_nama').innerText = result.nama;
+                } else {
+                    document.getElementById('display_nama').innerText = "ID TIDAK DITEMUKAN";
+                    NAMA_SANTRI_GLOBAL = "";
+                }
+            } catch (e) { document.getElementById('display_nama').innerText = ""; }
         }
-    }
 
-    function cetakLaporanShift(bendahara, total) {
-        const tgl = new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
-        const waktu = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-        const win = window.open('', '_blank');
-        win.document.write(`
-            <html>
-            <head>
-                <style>
-                    body { font-family: 'Segoe UI', Arial, sans-serif; color: #333; padding: 10px; }
-                    .report-box { width: 300px; border: 2px solid #006400; padding: 20px; border-radius: 15px; margin: auto; }
-                    .header { text-align: center; margin-bottom: 20px; border-bottom: 1px dashed #ddd; padding-bottom: 10px; }
-                    .header h1 { margin: 0; font-size: 16px; color: #006400; text-transform: uppercase; }
-                    .summary-box { background: #006400; color: white; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 20px; }
-                    .summary-val { font-size: 20px; font-weight: 900; margin-top: 5px; }
-                    .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f2f2f2; font-size: 11px; }
-                    .info-val { font-weight: bold; }
-                    .footer { text-align: center; margin-top: 25px; font-size: 9px; color: #888; }
-                </style>
-            </head>
-            <body onload="window.print()">
-                <div class="report-box">
-                    <div class="header"><h1>Laporan Kas Shift</h1><p style="font-size: 9px; color: #999;">PP. Miftahul Ulum Terisi</p></div>
-                    <div class="summary-box"><div>Total Kas Diterima (Cash)</div><div class="summary-val">Rp ${Number(total).toLocaleString('id-ID')}</div></div>
-                    <div class="info-row"><span>Nama Petugas</span><span class="info-val">${bendahara}</span></div>
-                    <div class="info-row"><span>Tanggal Cetak</span><span class="info-val">${tgl}</span></div>
-                    <div class="info-row"><span>Waktu Rekap</span><span class="info-val">${waktu} WIB</span></div>
-                    <div class="footer">Laporan ini dihasilkan otomatis oleh sistem SI-SANTRI.<br>pinggirX.com</div>
-                </div>
-            </body>
-            </html>
-        `);
-        win.document.close();
-    }
-</script>
+        async function prosesBayarCash() {
+            const pin = document.getElementById('admin_pin').value;
+            const id = document.getElementById('id_santri').value;
+            const amount = document.getElementById('cash_amount').value;
+            const bendahara = document.getElementById('nama_bendahara').value;
+            const btn = document.getElementById('btn-proses');
 
-        async function cekLaporanShift() {
-    const pin = document.getElementById('admin_pin').value;
-    const bendahara = document.getElementById('nama_bendahara').value;
-    
-    if (pin !== PIN_RAHASIA) return alert("Masukkan PIN untuk cek laporan!");
+            if (pin !== PIN_RAHASIA) return alert("PIN Admin Salah!");
+            if (!id || !amount || !NAMA_SANTRI_GLOBAL) return alert("Pastikan ID valid dan klik CEK!");
+            if (!confirm(`Simpan pembayaran Rp ${Number(amount).toLocaleString('id-ID')} dari ${NAMA_SANTRI_GLOBAL}?`)) return;
 
-    console.log("Mengambil laporan untuk:", bendahara); // Cek di console
-    
-    try {
-        const response = await fetch(`${API_URL}?action=report&bendahara=${encodeURIComponent(bendahara)}`);
-        const result = await response.json();
-        
-        console.log("Hasil dari server:", result); // Cek hasil di console
+            btn.innerText = "MENYIMPAN...";
+            btn.disabled = true;
 
-        if (result.total !== undefined) {
-            cetakLaporanShift(bendahara, result.total);
-        } else {
-            alert("Data tidak ditemukan atau error di server.");
-        }
-        
-    } catch (e) {
-        console.error("Error Fetch:", e);
-        alert("Gagal terhubung ke server. Pastikan URL API sudah benar.");
-    }
-}
-        
-        // Memanggil fungsi cetak laporan bergaya resi
-        cetakLaporanShift(bendahara, result.total);
-        
-    } catch (e) {
-        alert("Gagal mengambil laporan.");
-    }
-}
-
-// Fungsi Baru untuk Menampilkan Laporan Bergaya Resi
-function cetakLaporanShift(bendahara, total) {
-    const tgl = new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
-    const waktu = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-    
-    const win = window.open('', '_blank');
-    win.document.write(`
-        <html>
-        <head>
-            <style>
-                body { font-family: 'Segoe UI', Arial, sans-serif; color: #333; padding: 10px; }
-                .report-box { width: 300px; border: 2px solid #006400; padding: 20px; border-radius: 15px; margin: auto; position: relative; }
-                .header { text-align: center; margin-bottom: 20px; border-bottom: 1px dashed #ddd; padding-bottom: 10px; }
-                .header h1 { margin: 0; font-size: 16px; color: #006400; text-transform: uppercase; }
-                .summary-box { background: #006400; color: white; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 20px; }
-                .summary-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
-                .summary-val { font-size: 20px; font-weight: 900; margin-top: 5px; }
-                .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f2f2f2; font-size: 11px; }
-                .info-label { color: #888; }
-                .info-val { font-weight: bold; }
-                .footer { text-align: center; margin-top: 25px; font-size: 9px; color: #888; line-height: 1.5; }
-                .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 40px; color: rgba(0,100,0,0.05); font-weight: bold; z-index: -1; white-space: nowrap; }
-                @media print { .no-print { display: none; } }
-            </style>
-        </head>
-        <body onload="window.print()">
-            <div class="report-box">
-                <div class="watermark">MIFTAHUL ULUM</div>
-                <div class="header">
-                    <h1>Laporan Kas Shift</h1>
-                    <p style="font-size: 9px; color: #999; margin-top: 5px;">PP. Miftahul Ulum Terisi</p>
-                </div>
-                
-                <div class="summary-box">
-                    <div class="summary-label">Total Kas Diterima (Cash)</div>
-                    <div class="summary-val">Rp ${Number(total).toLocaleString('id-ID')}</div>
-                </div>
-
-                <div class="info-row">
-                    <span class="info-label">Nama Petugas</span>
-                    <span class="info-val">${bendahara}</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Tanggal Cetak</span>
-                    <span class="info-val">${tgl}</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Waktu Rekap</span>
-                    <span class="info-val">${waktu} WIB</span>
-                </div>
-                <div class="info-row" style="border:0">
-                    <span class="info-label">Status Data</span>
-                    <span class="info-val" style="color: #006400;">TERVERIFIKASI</span>
-                </div>
-
-                <div class="text-center mt-10 pb-6">
-                    <p class="text-[10px] text-slate-400 font-bold tracking-widest uppercase">
-                        © 2026 <span style="text-transform: none !important; font-family: sans-serif;" class="text-green-800">pinggirX.com</span>
-                    </p>
-                </div>
-            </div>
-        </body>
-        </html>
-    `);
-    win.document.close();
-}
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'pay_cash', id_santri: id, amount: amount, bendahara: bendahara })
+                });
+                const result = await response.json();
+                if(result.status
