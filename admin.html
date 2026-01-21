@@ -3,103 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Sistem Bayar Cash Miftahul Ulum</title>
+    <title>Admin - Miftahul Ulum</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         .bg-nu-green { background-color: #006400; }
         .text-nu-green { color: #006400; }
         .bg-nu-gold { background-color: #D4AF37; }
-        body { background-color: #f0f4f0; }
+        body { background-color: #f8faf8; }
     </style>
 </head>
 <body class="min-h-screen font-sans text-slate-700">
     <div class="max-w-md mx-auto p-4">
         
         <div class="text-center py-6">
-            <img src="logo-pesantren.png" alt="Logo" class="h-16 mx-auto mb-2" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_Nahdlatul_Ulama.png/600px-Logo_Nahdlatul_Ulama.png';">
+            <img src="logo-pesantren.png" class="h-16 mx-auto mb-2" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_Nahdlatul_Ulama.png/600px-Logo_Nahdlatul_Ulama.png';">
             <h1 class="text-xl font-black text-green-900 leading-tight uppercase">Pondok Pesantren<br>Miftahul Ulum</h1>
             <div class="h-1 w-12 bg-nu-gold mx-auto mt-2 rounded-full"></div>
         </div>
 
-        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100">
+        <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 mb-6">
             <div class="bg-nu-green p-4 text-white text-center">
-                <h2 class="font-bold tracking-widest text-xs uppercase text-white">Sistem Bayar Cash</h2>
+                <h2 class="font-bold tracking-widest text-xs uppercase">Sistem Bayar Cash</h2>
             </div>
-            
-            <div class="p-6 space-y-5">
-                <div class="grid grid-cols-2 gap-4">
+            <div class="p-6 space-y-4">
+                <div class="grid grid-cols-2 gap-3 text-center">
                     <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-1">PIN Otoritas</label>
-                        <input type="password" id="admin_pin" class="w-full bg-slate-50 border-2 border-slate-100 p-3 rounded-2xl focus:border-nu-green outline-none text-center font-bold" placeholder="****">
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">PIN Admin</label>
+                        <input type="password" id="admin_pin" class="w-full bg-slate-50 border-2 border-slate-100 p-2 rounded-xl text-center font-bold" placeholder="****">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-1">Bendahara</label>
-                        <select id="nama_bendahara" class="w-full bg-slate-50 border-2 border-slate-100 p-3 rounded-2xl focus:border-nu-green outline-none font-bold text-xs">
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Bendahara</label>
+                        <select id="nama_bendahara" class="w-full bg-slate-50 border-2 border-slate-100 p-2 rounded-xl text-xs font-bold">
                             <option value="Bendahara 1">Bendahara 1</option>
                             <option value="Bendahara 2">Bendahara 2</option>
                         </select>
                     </div>
                 </div>
-
-                <div class="h-px bg-slate-100"></div>
-
                 <div>
-                    <label class="block text-[10px] font-black text-slate-400 uppercase mb-1 text-center">Identitas Santri</label>
                     <div class="flex gap-2">
-                        <input type="text" id="id_santri" class="flex-1 bg-yellow-50 border-2 border-yellow-100 p-3 rounded-2xl focus:border-nu-green outline-none font-bold text-center text-lg" placeholder="ID SANTRI">
-                        <button onclick="cariNama()" class="bg-nu-green text-white px-5 rounded-2xl text-[10px] font-bold hover:bg-green-800 transition">CEK</button>
+                        <input type="text" id="id_santri" class="flex-1 bg-yellow-50 border-2 border-yellow-100 p-3 rounded-2xl text-center font-bold text-lg" placeholder="ID SANTRI">
+                        <button onclick="cariNama()" class="bg-nu-green text-white px-5 rounded-2xl text-[10px] font-bold">CEK</button>
                     </div>
                     <p id="display_nama" class="mt-2 text-center font-black text-nu-green text-sm h-5"></p>
                 </div>
-
                 <div>
-                    <label class="block text-[10px] font-black text-slate-400 uppercase mb-1 text-center">Nominal Pembayaran</label>
-                    <div class="relative">
-                        <span class="absolute left-4 top-3.5 font-bold text-nu-green">Rp</span>
-                        <input type="number" id="cash_amount" class="w-full border-2 border-slate-100 p-4 pl-12 rounded-2xl text-2xl font-black text-nu-green outline-none focus:border-nu-green text-center shadow-inner" placeholder="0">
-                    </div>
+                    <input type="number" id="cash_amount" class="w-full border-2 border-slate-100 p-4 rounded-2xl text-2xl font-black text-nu-green text-center" placeholder="Nominal Rp">
                 </div>
-
-                <button onclick="prosesBayarCash()" id="btn-proses" class="w-full bg-nu-green text-white font-bold py-5 rounded-2xl hover:shadow-xl hover:-translate-y-1 transition-all uppercase tracking-widest text-sm">
-                    Simpan & Cetak Struk
-                </button>
+                <button onclick="prosesBayarCash()" id="btn-proses" class="w-full bg-nu-green text-white font-bold py-4 rounded-2xl uppercase tracking-widest text-sm">Simpan & Cetak Resi</button>
             </div>
         </div>
 
-        <div class="mt-6 flex flex-col gap-3">
-            <button onclick="cekLaporanShift()" class="w-full bg-white border-2 border-nu-green text-nu-green font-bold py-3 rounded-2xl hover:bg-green-50 transition-all text-[10px] uppercase tracking-widest">
-                Rekap Kas Shift Hari Ini
-            </button>
-            <button onclick="location.href='index.html'" class="text-center text-slate-400 text-[10px] font-bold uppercase tracking-widest hover:text-nu-green italic">Kembali ke Portal Utama</button>
+        <div class="bg-white rounded-3xl shadow-lg border border-slate-100 p-6 space-y-4">
+            <h3 class="text-center text-[10px] font-black text-slate-400 uppercase tracking-widest border-b pb-2">Manajemen Laporan</h3>
+            
+            <div class="space-y-3">
+                <div class="flex gap-2">
+                    <input type="date" id="filter_tgl" class="flex-1 border-2 border-slate-100 p-2 rounded-xl text-xs">
+                    <button onclick="unduhLaporan('daily', 'pdf')" class="bg-nu-green text-white px-3 rounded-xl text-[9px] font-bold uppercase">Rekap Hari</button>
+                </div>
+                <div class="flex gap-2">
+                    <input type="month" id="filter_bln" class="flex-1 border-2 border-slate-100 p-2 rounded-xl text-xs">
+                    <button onclick="unduhLaporan('monthly', 'excel')" class="bg-nu-gold text-nu-green px-3 rounded-xl text-[9px] font-bold uppercase">Download Excel</button>
+                </div>
+            </div>
+            
+            <button onclick="cekLaporanShift()" class="w-full border-2 border-nu-green text-nu-green font-bold py-2 rounded-xl text-[10px] uppercase">Laporan Kas Shift Petugas</button>
         </div>
 
         <div class="text-center mt-10 pb-6">
-            <p class="text-[10px] text-slate-400 font-bold tracking-widest uppercase">
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
                 © 2026 <span style="text-transform: none !important; font-family: sans-serif;" class="text-green-800">pinggirX.com</span>
             </p>
         </div>
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbw6VXiM3bIAp8-9vsuXNyLB-6Qb9h_e4IAeV-RFvUyib4MIjykYt4UFYu_OSVeBTp-w/exec"; 
-        const PIN_RAHASIA = "jirolupatma"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbydcYzMBhI41iWWupzhxOszrTIhmKPwpuqAJzNLuGKG0MCDLI-1GxcljDmjaxGB4sQr/exec";
+        const PIN_RAHASIA = "jirolupatma";
         let NAMA_SANTRI_GLOBAL = "";
 
         async function cariNama() {
             const id = document.getElementById('id_santri').value;
-            if(!id) return alert("Masukkan ID Santri");
-            document.getElementById('display_nama').innerText = "Mencari...";
-            try {
-                const response = await fetch(`${API_URL}?action=login&id_santri=${id}&pin=ADMIN_BYPASS`);
-                const result = await response.json();
-                if(result.nama) {
-                    NAMA_SANTRI_GLOBAL = result.nama;
-                    document.getElementById('display_nama').innerText = result.nama;
-                } else {
-                    document.getElementById('display_nama').innerText = "ID TIDAK DITEMUKAN";
-                    NAMA_SANTRI_GLOBAL = "";
-                }
-            } catch (e) { document.getElementById('display_nama').innerText = ""; }
+            const res = await fetch(`${API_URL}?action=login&id_santri=${id}&pin=ADMIN_BYPASS`);
+            const data = await res.json();
+            if(data.nama) { NAMA_SANTRI_GLOBAL = data.nama; document.getElementById('display_nama').innerText = data.nama; }
+            else { document.getElementById('display_nama').innerText = "TIDAK DITEMUKAN"; }
         }
 
         async function prosesBayarCash() {
@@ -107,107 +96,54 @@
             const id = document.getElementById('id_santri').value;
             const amount = document.getElementById('cash_amount').value;
             const bendahara = document.getElementById('nama_bendahara').value;
-            const btn = document.getElementById('btn-proses');
+            if (pin !== PIN_RAHASIA) return alert("PIN SALAH");
+            if (!NAMA_SANTRI_GLOBAL || !amount) return alert("Lengkapi data!");
 
-            if (pin !== PIN_RAHASIA) return alert("PIN Admin Salah!");
-            if (!id || !amount || !NAMA_SANTRI_GLOBAL) return alert("Pastikan ID valid dan klik CEK!");
-            if (!confirm(`Simpan pembayaran Rp ${Number(amount).toLocaleString('id-ID')} dari ${NAMA_SANTRI_GLOBAL}?`)) return;
-
-            btn.innerText = "MENYIMPAN...";
-            btn.disabled = true;
-
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'pay_cash', id_santri: id, amount: amount, bendahara: bendahara })
-                });
-                const result = await response.json();
-                if(result.status === "success") {
-                    cetakStruk(id, NAMA_SANTRI_GLOBAL, amount, bendahara);
-                    location.reload();
-                } else {
-                    alert("Gagal: " + result.msg);
-                }
-            } catch (e) { alert("Error koneksi"); }
-            finally { btn.innerText = "Simpan & Cetak Struk"; btn.disabled = false; }
+            const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'pay_cash', id_santri: id, amount: amount, bendahara: bendahara }) });
+            const data = await res.json();
+            if(data.status === "success") { cetakStruk(id, NAMA_SANTRI_GLOBAL, amount, bendahara); location.reload(); }
         }
 
-        function cetakStruk(id, nama, amount, bendahara) {
-            const tgl = new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
-            const waktu = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        async function unduhLaporan(type, format) {
+            const filter = (type === 'daily') ? document.getElementById('filter_tgl').value : document.getElementById('filter_bln').value;
+            if(!filter) return alert("Pilih waktu!");
+            
+            const res = await fetch(`${API_URL}?action=report_${type}&filter=${filter}`);
+            const data = await res.json();
+            
+            if(data.detail.length === 0) return alert("Data kosong");
+
+            if(format === 'pdf') { cetakPDF(data); }
+            else { exportExcel(data, filter); }
+        }
+
+        function exportExcel(res, filter) {
+            const dataExcel = res.detail.map(d => ({ "Tanggal": d.tgl, "Jam": d.waktu, "ID Santri": d.id, "Nominal": d.nominal, "Petugas": d.petugas }));
+            const ws = XLSX.utils.json_to_sheet(dataExcel);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Laporan");
+            XLSX.writeFile(wb, `Laporan_${filter}.xlsx`);
+        }
+
+        function cetakPDF(res) {
             const win = window.open('', '_blank');
-            win.document.write(`
-                <html>
-                <head>
-                    <style>
-                        body { font-family: 'Segoe UI', sans-serif; color: #333; padding: 20px; }
-                        .ticket { width: 300px; border: 1px solid #eee; padding: 15px; border-radius: 15px; margin: auto; }
-                        .header { text-align: center; border-bottom: 1px dashed #ddd; padding-bottom: 10px; margin-bottom: 10px;}
-                        .header h1 { margin: 0; font-size: 16px; color: #006400; text-transform: uppercase; }
-                        .amount-box { background: #f8faf8; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 15px; border: 1px solid #eef2ee; }
-                        .info-row { display: flex; justify-content: space-between; padding: 5px 0; font-size: 11px; }
-                        .footer { text-align: center; margin-top: 20px; font-size: 9px; color: #aaa; }
-                    </style>
-                </head>
-                <body onload="window.print(); window.onafterprint = function(){ window.close(); }">
-                    <div class="ticket">
-                        <div class="header"><h1>PP. Miftahul Ulum</h1><p>Rajasinga - Indramayu</p></div>
-                        <div class="amount-box"><div>Total Bayar Tunai</div><div style="font-size:20px; font-weight:900; color:#006400">Rp ${Number(amount).toLocaleString('id-ID')}</div></div>
-                        <div class="info-row"><span>Nama Santri</span><strong>${nama}</strong></div>
-                        <div class="info-row"><span>ID Santri</span><strong>${id}</strong></div>
-                        <div class="info-row"><span>Tanggal</span><strong>${tgl} - ${waktu}</strong></div>
-                        <div class="info-row"><span>Petugas</span><strong>${bendahara}</strong></div>
-                        <div class="footer">Syukron Jazakumullah Khairan<br>SI-SANTRI - pinggirX.com</div>
-                    </div>
-                </body>
-                </html>
-            `);
-            win.document.close();
+            let rows = res.detail.map(d => `<tr><td>${d.waktu}</td><td>${d.id}</td><td align="right">${d.nominal.toLocaleString()}</td></tr>`).join('');
+            win.document.write(`<html><body><center><h2>LAPORAN CASH</h2><h4>${res.filter}</h4><table border="1" width="100%" style="border-collapse:collapse"><tr><th>Waktu</th><th>ID</th><th>Nominal</th></tr>${rows}</table><h3>TOTAL: Rp ${res.total.toLocaleString()}</h3><p>pinggirX.com</p></center></body></html>`);
+            win.document.close(); win.print();
         }
 
         async function cekLaporanShift() {
-            const pin = document.getElementById('admin_pin').value;
-            const bendahara = document.getElementById('nama_bendahara').value;
-            if (pin !== PIN_RAHASIA) return alert("Masukkan PIN untuk cek laporan!");
-            try {
-                const response = await fetch(`${API_URL}?action=report&bendahara=${encodeURIComponent(bendahara)}`);
-                const result = await response.json();
-                if (result.total !== undefined) {
-                    cetakLaporanShift(bendahara, result.total);
-                } else {
-                    alert("Data tidak ditemukan.");
-                }
-            } catch (e) { alert("Gagal terhubung ke server."); }
+            const bnd = document.getElementById('nama_bendahara').value;
+            const tgl = new Date().toISOString().split('T')[0];
+            const res = await fetch(`${API_URL}?action=report_daily&filter=${tgl}&bendahara=${bnd}`);
+            const data = await res.json();
+            alert(`Laporan Shift ${bnd}\nTotal Hari Ini: Rp ${data.total.toLocaleString()}`);
         }
 
-        function cetakLaporanShift(bendahara, total) {
-            const tgl = new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
-            const waktu = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        function cetakStruk(id, nama, amount, bendahara) {
+            const tgl = new Date().toLocaleString('id-ID');
             const win = window.open('', '_blank');
-            win.document.write(`
-                <html>
-                <head>
-                    <style>
-                        body { font-family: 'Segoe UI', sans-serif; color: #333; padding: 20px; }
-                        .report-box { width: 300px; border: 2px solid #006400; padding: 20px; border-radius: 15px; margin: auto; }
-                        .header { text-align: center; margin-bottom: 20px; border-bottom: 1px dashed #ddd; padding-bottom: 10px; }
-                        .summary-box { background: #006400; color: white; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 15px; }
-                        .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f2f2f2; font-size: 11px; }
-                        .footer { text-align: center; margin-top: 25px; font-size: 9px; color: #888; }
-                    </style>
-                </head>
-                <body onload="window.print(); window.onafterprint = function(){ window.close(); }">
-                    <div class="report-box">
-                        <div class="header"><h1>Laporan Kas Shift</h1><p>PP. Miftahul Ulum Terisi</p></div>
-                        <div class="summary-box"><div>Total Kas Diterima (Cash)</div><div style="font-size:20px; font-weight:900">Rp ${Number(total).toLocaleString('id-ID')}</div></div>
-                        <div class="info-row"><span>Petugas</span><strong>${bendahara}</strong></div>
-                        <div class="info-row"><span>Tanggal Rekap</span><strong>${tgl}</strong></div>
-                        <div class="info-row"><span>Waktu</span><strong>${waktu} WIB</strong></div>
-                        <div class="footer">Dicetak otomatis oleh SI-SANTRI<br>pinggirX.com</div>
-                    </div>
-                </body>
-                </html>
-            `);
+            win.document.write(`<html><body onload="window.print();window.close()"><div style="width:250px;font-family:monospace;border:1px solid #000;padding:10px"><center><strong>MIFTAHUL ULUM</strong><br>RESI TUNAI<hr>ID: ${id}<br>Nama: ${nama}<br>Total: Rp ${Number(amount).toLocaleString()}<hr>Oleh: ${bendahara}<br>${tgl}<br>pinggirX.com</center></div></body></html>`);
             win.document.close();
         }
     </script>
