@@ -186,15 +186,88 @@
         }
 
         async function cekLaporanShift() {
-            const pin = document.getElementById('admin_pin').value;
-            const bendahara = document.getElementById('nama_bendahara').value;
-            if (pin !== PIN_RAHASIA) return alert("Masukkan PIN!");
-            try {
-                const response = await fetch(`${API_URL}?action=report&bendahara=${bendahara}`);
-                const result = await response.json();
-                alert(`LAPORAN KAS SHIFT\n------------------\nPetugas: ${bendahara}\nTotal Kas: Rp ${result.total.toLocaleString('id-ID')}\n------------------\nSetorkan uang tunai sejumlah di atas.`);
-            } catch (e) { alert("Gagal mengambil laporan."); }
-        }
-    </script>
-</body>
-</html>
+    const pin = document.getElementById('admin_pin').value;
+    const bendahara = document.getElementById('nama_bendahara').value;
+    
+    if (pin !== PIN_RAHASIA) return alert("Masukkan PIN untuk cek laporan!");
+
+    try {
+        const response = await fetch(`${API_URL}?action=report&bendahara=${bendahara}`);
+        const result = await response.json();
+        
+        // Memanggil fungsi cetak laporan bergaya resi
+        cetakLaporanShift(bendahara, result.total);
+        
+    } catch (e) {
+        alert("Gagal mengambil laporan.");
+    }
+}
+
+// Fungsi Baru untuk Menampilkan Laporan Bergaya Resi
+function cetakLaporanShift(bendahara, total) {
+    const tgl = new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+    const waktu = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    
+    const win = window.open('', '_blank');
+    win.document.write(`
+        <html>
+        <head>
+            <style>
+                body { font-family: 'Segoe UI', Arial, sans-serif; color: #333; padding: 10px; }
+                .report-box { width: 300px; border: 2px solid #006400; padding: 20px; border-radius: 15px; margin: auto; position: relative; }
+                .header { text-align: center; margin-bottom: 20px; border-bottom: 1px dashed #ddd; padding-bottom: 10px; }
+                .header h1 { margin: 0; font-size: 16px; color: #006400; text-transform: uppercase; }
+                .summary-box { background: #006400; color: white; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 20px; }
+                .summary-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
+                .summary-val { font-size: 20px; font-weight: 900; margin-top: 5px; }
+                .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f2f2f2; font-size: 11px; }
+                .info-label { color: #888; }
+                .info-val { font-weight: bold; }
+                .footer { text-align: center; margin-top: 25px; font-size: 9px; color: #888; line-height: 1.5; }
+                .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 40px; color: rgba(0,100,0,0.05); font-weight: bold; z-index: -1; white-space: nowrap; }
+                @media print { .no-print { display: none; } }
+            </style>
+        </head>
+        <body onload="window.print()">
+            <div class="report-box">
+                <div class="watermark">MIFTAHUL ULUM</div>
+                <div class="header">
+                    <h1>Laporan Kas Shift</h1>
+                    <p style="font-size: 9px; color: #999; margin-top: 5px;">PP. Miftahul Ulum Terisi</p>
+                </div>
+                
+                <div class="summary-box">
+                    <div class="summary-label">Total Kas Diterima (Cash)</div>
+                    <div class="summary-val">Rp ${Number(total).toLocaleString('id-ID')}</div>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">Nama Petugas</span>
+                    <span class="info-val">${bendahara}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Tanggal Cetak</span>
+                    <span class="info-val">${tgl}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Waktu Rekap</span>
+                    <span class="info-val">${waktu} WIB</span>
+                </div>
+                <div class="info-row" style="border:0">
+                    <span class="info-label">Status Data</span>
+                    <span class="info-val" style="color: #006400;">TERVERIFIKASI</span>
+                </div>
+
+                <div class="footer">
+                    Laporan ini dihasilkan otomatis oleh sistem SI-SANTRI.<br>
+                    Silakan serahkan uang tunai sesuai nominal di atas<br>
+                    kepada Bendahara Utama.
+                    <br><br>
+                    <strong>Miftahul Ulum • pinggirx.com</strong>
+                </div>
+            </div>
+        </body>
+        </html>
+    `);
+    win.document.close();
+}
