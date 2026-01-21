@@ -6,44 +6,82 @@
     <title>Pembayaran Santri Online</title>
     <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="Mid-client-LnUzaM8ZO6cHVLc-"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .card-summary {
+            transition: all 0.3s ease;
+        }
+        .card-summary:hover {
+            transform: translateY(-2px);
+        }
+    </style>
 </head>
-<body class="bg-blue-50 min-h-screen">
+<body class="bg-slate-100 min-h-screen font-sans">
     <div class="max-w-md mx-auto p-4">
-        <div class="text-center py-6">
-            <h1 class="text-2xl font-bold text-blue-800">Pembayaran Santri</h1>
-            <p class="text-gray-600 text-sm">Aplikasi Tagihan & Pembayaran Mandiri</p>
+        <div class="text-center py-8">
+            <h1 class="text-3xl font-extrabold text-blue-900 tracking-tight">SI-SANTRI</h1>
+            <p class="text-slate-500 text-sm font-medium">Sistem Informasi & Pembayaran Pesantren</p>
         </div>
 
-        <div id="login-box" class="bg-white p-6 rounded-xl shadow-lg">
-            <label class="block mb-2 text-sm font-semibold">Nomor Induk Santri (ID)</label>
-            <input type="text" id="id_santri" class="w-full border p-3 rounded-lg mb-4" placeholder="Masukkan ID Santri">
+        <div id="login-box" class="bg-white p-8 rounded-2xl shadow-xl border border-slate-200">
+            <div class="mb-6">
+                <label class="block mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">ID Santri</label>
+                <input type="text" id="id_santri" class="w-full border-2 border-slate-100 p-3 rounded-xl focus:border-blue-500 outline-none transition" placeholder="Masukkan ID Santri">
+            </div>
             
-            <label class="block mb-2 text-sm font-semibold">PIN Keamanan</label>
-            <input type="password" id="pin_santri" class="w-full border p-3 rounded-lg mb-4" placeholder="******">
+            <div class="mb-8">
+                <label class="block mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">PIN Keamanan</label>
+                <input type="password" id="pin_santri" class="w-full border-2 border-slate-100 p-3 rounded-xl focus:border-blue-500 outline-none transition" placeholder="******">
+            </div>
             
-            <button onclick="checkBill()" id="btn-login" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">CEK TAGIHAN</button>
+            <button onclick="checkBill()" id="btn-login" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all">MASUK & CEK TAGIHAN</button>
         </div>
 
         <div id="bill-box" class="hidden space-y-4">
-            <div class="bg-white p-6 rounded-xl shadow-lg">
-                <div class="flex justify-between items-center border-b pb-2 mb-4">
-                    <h3 class="font-bold text-gray-800">Rincian Tagihan</h3>
-                    <button onclick="location.reload()" class="text-xs text-red-500 font-semibold hover:underline">← Batal / Kembali</button>
+            <div class="bg-blue-900 text-white p-4 rounded-xl shadow-md flex justify-between items-center">
+                <div>
+                    <p class="text-[10px] text-blue-200 uppercase font-bold">Wali dari:</p>
+                    <h2 id="nama-wali" class="font-bold text-lg">-</h2>
+                </div>
+                <button onclick="location.reload()" class="bg-blue-800 hover:bg-red-600 p-2 rounded-lg transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div class="card-summary bg-white p-4 rounded-xl shadow-sm border-l-4 border-red-500">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase">Total Tagihan</p>
+                    <p id="summary-total" class="text-lg font-black text-slate-800">Rp 0</p>
+                </div>
+                <div id="status-card" class="card-summary bg-white p-4 rounded-xl shadow-sm border-l-4 border-yellow-500">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase">Status</p>
+                    <p id="summary-status" class="text-lg font-black text-yellow-600">PENDING</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-100">
+                <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+                    Rincian Komponen Biaya
+                </h3>
+                
+                <div id="bill-list" class="space-y-3 mb-6"></div>
+                
+                <div class="mt-4 pt-4 border-t-2 border-slate-50">
+                    <label class="block text-[10px] font-bold text-slate-400 mb-2 uppercase">Nominal Bayar (Bisa Diangsur)</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-3 font-bold text-slate-400">Rp</span>
+                        <input type="number" id="pay_amount" class="w-full border-2 border-blue-50 p-3 pl-10 rounded-xl text-xl font-black text-blue-700 outline-none focus:border-blue-500 transition" placeholder="0">
+                    </div>
                 </div>
                 
-                <div id="bill-list" class="space-y-3 text-sm"></div>
-                
-                <div class="mt-4 pt-4 border-t border-dashed">
-                    <label class="block text-xs font-bold text-gray-500 mb-1">JUMLAH YANG AKAN DIBAYAR</label>
-                    <input type="number" id="pay_amount" class="w-full border p-3 rounded-lg text-lg font-bold text-blue-700" placeholder="Rp 0">
-                    <p class="text-[10px] text-gray-400 mt-1">*Pembayaran bisa diangsur (masukkan nominal bebas)</p>
-                </div>
-                
-                <div class="space-y-2 mt-6">
-                    <button onclick="payNow()" id="btn-pay" class="w-full bg-green-600 text-white font-bold py-3 rounded-lg shadow-md hover:bg-green-700 transition">BAYAR SEKARANG</button>
-                    <button onclick="sendWA()" class="w-full border border-green-500 text-green-600 py-2 rounded-lg text-sm flex items-center justify-center gap-2">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.319 1.592 5.548 0 10.058-4.51 10.061-10.062a10.013 10.013 0 00-2.937-7.113 10.013 10.013 0 00-7.115-2.938c-5.549 0-10.059 4.511-10.061 10.06 0 2.1.593 3.857 1.705 5.556l-.947 3.467 3.545-.93zm11.387-5.477c-.31-.156-1.834-.905-2.112-1.006-.277-.101-.48-.151-.681.151-.202.302-.782 1.006-.958 1.208-.176.201-.352.227-.662.07-.311-.156-1.311-.483-2.498-1.541-.924-.825-1.547-1.844-1.729-2.146-.181-.302-.019-.465.136-.62.14-.139.31-.362.466-.544.156-.181.208-.312.311-.52.104-.208.052-.39-.026-.544-.078-.156-.681-1.641-.933-2.246-.246-.588-.495-.508-.681-.518-.176-.008-.378-.01-.58-.01-.202 0-.53.076-.807.378-.277.302-1.058 1.033-1.058 2.52 0 1.487 1.083 2.92 1.235 3.122.151.201 2.13 3.253 5.16 4.561.721.311 1.282.497 1.721.637.724.23 1.383.197 1.903.12.58-.086 1.834-.751 2.091-1.441.257-.69.257-1.282.181-1.441-.077-.159-.278-.261-.588-.416z"/></svg>
-                        Kirim Rincian ke WhatsApp
+                <div class="grid grid-cols-1 gap-3 mt-6">
+                    <button onclick="payNow()" id="btn-pay" class="w-full bg-green-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-green-100 hover:bg-green-700 transition-all flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                        BAYAR SEKARANG
+                    </button>
+                    <button onclick="sendWA()" class="w-full border-2 border-slate-100 text-slate-500 py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 hover:bg-slate-50 transition">
+                        <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.319 1.592 5.548 0 10.058-4.51 10.061-10.062a10.013 10.013 0 00-2.937-7.113 10.013 10.013 0 00-7.115-2.938c-5.549 0-10.059 4.511-10.061 10.06 0 2.1.593 3.857 1.705 5.556l-.947 3.467 3.545-.93zm11.387-5.477c-.31-.156-1.834-.905-2.112-1.006-.277-.101-.48-.151-.681.151-.202.302-.782 1.006-.958 1.208-.176.201-.352.227-.662.07-.311-.156-1.311-.483-2.498-1.541-.924-.825-1.547-1.844-1.729-2.146-.181-.302-.019-.465.136-.62.14-.139.31-.362.466-.544.156-.181.208-.312.311-.52.104-.208.052-.39-.026-.544-.078-.156-.681-1.641-.933-2.246-.246-.588-.495-.508-.681-.518-.176-.008-.378-.01-.58-.01-.202 0-.53.076-.807.378-.277.302-1.058 1.033-1.058 2.52 0 1.487 1.083 2.92 1.235 3.122.151.201 2.13 3.253 5.16 4.561.721.311 1.282.497 1.721.637.724.23 1.383.197 1.903.12.58-.086 1.834-.751 2.091-1.441.257-.69.257-1.282.181-1.441-.077-.159-.278-.261-.588-.416z"/></svg>
+                        Bagikan ke WhatsApp
                     </button>
                 </div>
             </div>
@@ -51,7 +89,7 @@
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbyWA_POlXMMxzHlair0wX7ksx9JU5F16AsqSGtzs0D3CEMXsu1salmn_sEy0IDz223o/exec"; // Pastikan URL ini benar
+        const API_URL = "https://script.google.com/macros/s/AKfycbyWA_POlXMMxzHlair0wX7ksx9JU5F16AsqSGtzs0D3CEMXsu1salmn_sEy0IDz223o/exec";
 
         async function checkBill() {
             const id = document.getElementById('id_santri').value;
@@ -73,34 +111,41 @@
                 } else {
                     document.getElementById('login-box').classList.add('hidden');
                     document.getElementById('bill-box').classList.remove('hidden');
+                    document.getElementById('nama-wali').innerText = result.nama;
                     
-                    let html = `<p class="mb-4 text-blue-800 font-semibold bg-blue-50 p-2 rounded text-center">Wali Santri: <b>${result.nama}</b></p>`;
+                    let html = "";
                     let totalTagihan = 0;
 
                     if (result.data.length === 0) {
-                        html += `<p class="text-green-600 font-bold text-center py-4">Semua tagihan sudah LUNAS.</p>`;
+                        html += `<div class="text-center py-6 text-green-600"><p class="font-bold">Alhamdulillah!</p><p class="text-xs">Semua tagihan sudah LUNAS.</p></div>`;
                         document.getElementById('pay_amount').disabled = true;
+                        document.getElementById('summary-status').innerText = "LUNAS";
+                        document.getElementById('status-card').classList.replace('border-yellow-500', 'border-green-500');
+                        document.getElementById('summary-status').classList.replace('text-yellow-600', 'text-green-600');
                     } else {
                         result.data.forEach(row => {
                             const nominal = Number(row[3]);
                             totalTagihan += nominal;
                             html += `
-                            <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg border mb-2 shadow-sm">
+                            <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100">
                                 <div>
-                                    <p class="font-bold text-gray-700">${row[1]}</p>
-                                    <p class="text-[10px] text-gray-400 uppercase">Kategori: ${row[4] || '-'}</p>
+                                    <p class="font-bold text-slate-700 text-sm">${row[1]}</p>
+                                    <p class="text-[10px] text-slate-400 uppercase tracking-tighter">${row[4] || 'Umum'}</p>
                                 </div>
                                 <span class="font-bold text-red-600">Rp ${nominal.toLocaleString('id-ID')}</span>
                             </div>`;
                         });
                         document.getElementById('pay_amount').value = totalTagihan;
+                        document.getElementById('summary-status').innerText = "PENDING";
                     }
+                    
+                    document.getElementById('summary-total').innerText = "Rp " + totalTagihan.toLocaleString('id-ID');
                     document.getElementById('bill-list').innerHTML = html;
                 }
             } catch (e) {
-                alert("Gagal memuat data. Periksa koneksi atau URL Web App.");
+                alert("Gagal memuat data. Periksa koneksi.");
             } finally {
-                btn.innerText = "CEK TAGIHAN";
+                btn.innerText = "MASUK & CEK TAGIHAN";
                 btn.disabled = false;
             }
         }
@@ -112,7 +157,7 @@
 
             if(!amount || amount < 10000) return alert("Minimal pembayaran adalah Rp 10.000");
 
-            btnPay.innerText = "Menghubungkan ke Pembayaran...";
+            btnPay.innerText = "Memproses...";
             btnPay.disabled = true;
 
             try {
@@ -129,10 +174,10 @@
                         onError: function(result){ alert("Pembayaran Gagal!"); }
                     });
                 } else {
-                    alert("Gagal mendapatkan token pembayaran.");
+                    alert("Gagal mendapatkan token.");
                 }
             } catch (e) {
-                alert("Terjadi kesalahan sistem pembayaran.");
+                alert("Kesalahan sistem pembayaran.");
             } finally {
                 btnPay.innerText = "BAYAR SEKARANG";
                 btnPay.disabled = false;
@@ -141,15 +186,15 @@
 
         function sendWA() {
             const id = document.getElementById('id_santri').value;
-            // Mengambil teks dari list tagihan saja
-            const listItems = document.querySelectorAll('#bill-list .bg-gray-50');
+            const nama = document.getElementById('nama-wali').innerText;
+            const listItems = document.querySelectorAll('#bill-list > div');
             let rincianText = "";
             listItems.forEach(el => {
-                rincianText += "- " + el.innerText.replace(/\n/g, " ") + "\n";
+                rincianText += "📌 " + el.innerText.replace(/\n/g, " ") + "\n";
             });
             
-            const total = document.getElementById('pay_amount').value;
-            const text = encodeURIComponent(`Assalamualaikum, berikut rincian tagihan santri ID ${id}:\n\n${rincianText}\n*Total Tagihan: Rp ${Number(total).toLocaleString('id-ID')}*\n\nMohon segera diselesaikan melalui link web pembayaran. Terima kasih.`);
+            const total = document.getElementById('summary-total').innerText;
+            const text = encodeURIComponent(`*RINCIAN TAGIHAN SANTRI*\n\nWali: ${nama}\nID: ${id}\n\n${rincianText}\n*Total Hutang: ${total}*\n\nMohon segera diselesaikan melalui sistem online. Terima kasih.`);
             window.open(`https://wa.me/?text=${text}`);
         }
     </script>
