@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Pembayaran Cash Miftahul Ulum</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .bg-nu-green { background-color: #006400; }
+        .text-nu-green { color: #006400; }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen">
+    <div class="max-w-md mx-auto p-4">
+        <div class="text-center py-6">
+            <h1 class="text-xl font-bold text-nu-green uppercase">PORTAL ADMIN CASH</h1>
+            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Pondok Pesantren Miftahul Ulum</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-xl border-t-4 border-nu-green">
+            <div class="mb-4">
+                <label class="block mb-1 text-xs font-bold text-slate-500 uppercase italic">PIN Otoritas Admin</label>
+                <input type="password" id="admin_pin" class="w-full border-2 border-slate-100 p-3 rounded-xl focus:border-nu-green outline-none text-center font-bold" placeholder="******">
+            </div>
+
+            <hr class="my-6 border-dashed">
+
+            <div class="mb-4">
+                <label class="block mb-1 text-xs font-bold text-slate-500 uppercase">ID Santri</label>
+                <input type="text" id="id_santri" class="w-full border-2 border-slate-100 p-3 rounded-xl focus:border-nu-green outline-none font-bold" placeholder="Contoh: 2024001">
+            </div>
+
+            <div class="mb-6">
+                <label class="block mb-1 text-xs font-bold text-slate-500 uppercase">Nominal Cash yang Diterima</label>
+                <div class="relative">
+                    <span class="absolute left-4 top-3.5 font-bold text-nu-green">Rp</span>
+                    <input type="number" id="cash_amount" class="w-full border-2 border-green-50 p-3 pl-12 rounded-xl text-xl font-black text-nu-green outline-none focus:border-nu-green transition" placeholder="0">
+                </div>
+            </div>
+
+            <button onclick="prosesBayarCash()" id="btn-proses" class="w-full bg-nu-green text-white font-bold py-4 rounded-xl hover:bg-green-800 shadow-lg transition-all uppercase tracking-wider">
+                Simpan & Potong Tagihan
+            </button>
+        </div>
+
+        <div class="text-center mt-8">
+            <p class="text-[10px] text-slate-400 font-bold tracking-widest">© 2026 pinggirx.com</p>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbyysvwBOKK5kxiLhVC_jVFUvY_1I414NGaqXkT_o70GI3szv17ba1abgP7SDLg98KVr/exec";
+        const PIN_RAHASIA = "Lagi_demus.6"; // GANTI PIN INI SESUAI KEINGINAN ANDA
+
+        async function prosesBayarCash() {
+            const pin = document.getElementById('admin_pin').value;
+            const id = document.getElementById('id_santri').value;
+            const amount = document.getElementById('cash_amount').value;
+            const btn = document.getElementById('btn-proses');
+
+            if (pin !== PIN_RAHASIA) return alert("PIN Admin Salah!");
+            if (!id || !amount) return alert("ID Santri dan Nominal harus diisi!");
+
+            if (!confirm(`Konfirmasi: Terima Cash Rp ${Number(amount).toLocaleString('id-ID')} dari ID ${id}?`)) return;
+
+            btn.innerText = "Memproses Data...";
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ 
+                        action: 'pay_cash', 
+                        id_santri: id, 
+                        amount: amount 
+                    })
+                });
+                const result = await response.json();
+                
+                if(result.status === "success") {
+                    alert("Alhamdulillah! Pembayaran Berhasil Dicatat.");
+                    location.reload();
+                } else {
+                    alert("Gagal: " + result.msg);
+                }
+            } catch (e) {
+                alert("Terjadi kesalahan koneksi.");
+            } finally {
+                btn.innerText = "Simpan & Potong Tagihan";
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
