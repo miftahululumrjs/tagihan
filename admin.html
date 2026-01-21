@@ -79,7 +79,7 @@
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbxLRWBIJIKaeohFN9zWmeO05tQlU9_DO_sghEGsuw39vK14MqSWR-0JibwnplsjFuTf/exec"; // GANTI DENGAN URL WEB APP ANDA
+        const API_URL = "https://script.google.com/macros/s/AKfycbwjviw_VP6nYF9VOyT24J8wl84vTCqApD6PGU56VrZCFm58AHPN5Pv3ZVqDUGjsUPAf/exec; // GANTI DENGAN URL WEB APP ANDA
         const PIN_RAHASIA = "jirolupatma"; // GANTI PIN ANDA
         let NAMA_SANTRI_GLOBAL = "";
 
@@ -191,9 +191,25 @@
     
     if (pin !== PIN_RAHASIA) return alert("Masukkan PIN untuk cek laporan!");
 
+    console.log("Mengambil laporan untuk:", bendahara); // Cek di console
+    
     try {
-        const response = await fetch(`${API_URL}?action=report&bendahara=${bendahara}`);
+        const response = await fetch(`${API_URL}?action=report&bendahara=${encodeURIComponent(bendahara)}`);
         const result = await response.json();
+        
+        console.log("Hasil dari server:", result); // Cek hasil di console
+
+        if (result.total !== undefined) {
+            cetakLaporanShift(bendahara, result.total);
+        } else {
+            alert("Data tidak ditemukan atau error di server.");
+        }
+        
+    } catch (e) {
+        console.error("Error Fetch:", e);
+        alert("Gagal terhubung ke server. Pastikan URL API sudah benar.");
+    }
+}
         
         // Memanggil fungsi cetak laporan bergaya resi
         cetakLaporanShift(bendahara, result.total);
