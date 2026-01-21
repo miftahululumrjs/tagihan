@@ -15,10 +15,14 @@
         </div>
 
         <div id="login-box" class="bg-white p-6 rounded-xl shadow-lg">
-            <label class="block mb-2 text-sm font-semibold">Nomor Induk Santri (ID)</label>
-            <input type="text" id="id_santri" class="w-full border p-3 rounded-lg mb-4 focus:ring-2 focus:ring-blue-500" placeholder="Contoh: 2026001">
-            <button onclick="checkBill()" id="btn-login" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">CEK TAGIHAN</button>
-        </div>
+    <label class="block mb-2 text-sm font-semibold">Nomor Induk Santri (ID)</label>
+    <input type="text" id="id_santri" class="w-full border p-3 rounded-lg mb-4" placeholder="Contoh: 2026001">
+    
+    <label class="block mb-2 text-sm font-semibold">PIN Keamanan</label>
+    <input type="password" id="pin_santri" class="w-full border p-3 rounded-lg mb-4" placeholder="******">
+    
+    <button onclick="checkBill()" id="btn-login" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg">CEK TAGIHAN</button>
+</div>
 
         <div id="bill-box" class="hidden space-y-4">
             <div class="bg-white p-6 rounded-xl shadow-lg">
@@ -39,39 +43,21 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbyGZu77KjDdwpvL0zXWgZ3bDh4ZuVZe5s3qRzXEQNhm16Pi2dsPTnUDmJnk_9e9KiYm/exec";
 
         async function checkBill() {
-            const id = document.getElementById('id_santri').value;
-            if(!id) return alert("Masukkan ID Santri!");
-            
-            document.getElementById('btn-login').innerText = "Loading...";
-            
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'login', id_santri: id })
-                });
-                const data = await response.json();
-                
-                if(data.length === 0) {
-                    alert("Data tidak ditemukan");
-                } else {
-                    document.getElementById('login-box').classList.add('hidden');
-                    document.getElementById('bill-box').classList.remove('hidden');
-                    
-                    let html = "";
-                    data.forEach(row => {
-                        html += `
-                        <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
-                            <span>${row[1]}</span>
-                            <span class="font-bold text-red-600 text-right">Rp ${row[3].toLocaleString()}</span>
-                        </div>`;
-                    });
-                    document.getElementById('bill-list').innerHTML = html;
-                }
-            } catch (e) {
-                alert("Terjadi kesalahan koneksi");
-            }
-            document.getElementById('btn-login').innerText = "CEK TAGIHAN";
-        }
+    const id = document.getElementById('id_santri').value;
+    const pin = document.getElementById('pin_santri').value;
+    
+    const response = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'login', id_santri: id, pin: pin })
+    });
+    const result = await response.json();
+    
+    if(result.status === "error") {
+        alert(result.msg);
+    } else {
+        // Tampilkan tagihan seperti kode sebelumnya...
+    }
+}
 
         async function payNow() {
             const amount = document.getElementById('pay_amount').value;
