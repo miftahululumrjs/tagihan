@@ -122,4 +122,94 @@
                     body: JSON.stringify({ action: 'pay_cash', id_santri: id, amount: amount, bendahara: bendahara })
                 });
                 const result = await response.json();
-                if(result.status
+                if(result.status === "success") {
+                    cetakStruk(id, NAMA_SANTRI_GLOBAL, amount, bendahara);
+                    location.reload();
+                } else {
+                    alert("Gagal: " + result.msg);
+                }
+            } catch (e) { alert("Error koneksi"); }
+            finally { btn.innerText = "Simpan & Cetak Struk"; btn.disabled = false; }
+        }
+
+        function cetakStruk(id, nama, amount, bendahara) {
+            const tgl = new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+            const waktu = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            const win = window.open('', '_blank');
+            win.document.write(`
+                <html>
+                <head>
+                    <style>
+                        body { font-family: 'Segoe UI', sans-serif; color: #333; padding: 20px; }
+                        .ticket { width: 300px; border: 1px solid #eee; padding: 15px; border-radius: 15px; margin: auto; }
+                        .header { text-align: center; border-bottom: 1px dashed #ddd; padding-bottom: 10px; margin-bottom: 10px;}
+                        .header h1 { margin: 0; font-size: 16px; color: #006400; text-transform: uppercase; }
+                        .amount-box { background: #f8faf8; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 15px; border: 1px solid #eef2ee; }
+                        .info-row { display: flex; justify-content: space-between; padding: 5px 0; font-size: 11px; }
+                        .footer { text-align: center; margin-top: 20px; font-size: 9px; color: #aaa; }
+                    </style>
+                </head>
+                <body onload="window.print(); window.onafterprint = function(){ window.close(); }">
+                    <div class="ticket">
+                        <div class="header"><h1>PP. Miftahul Ulum</h1><p>Rajasinga - Indramayu</p></div>
+                        <div class="amount-box"><div>Total Bayar Tunai</div><div style="font-size:20px; font-weight:900; color:#006400">Rp ${Number(amount).toLocaleString('id-ID')}</div></div>
+                        <div class="info-row"><span>Nama Santri</span><strong>${nama}</strong></div>
+                        <div class="info-row"><span>ID Santri</span><strong>${id}</strong></div>
+                        <div class="info-row"><span>Tanggal</span><strong>${tgl} - ${waktu}</strong></div>
+                        <div class="info-row"><span>Petugas</span><strong>${bendahara}</strong></div>
+                        <div class="footer">Syukron Jazakumullah Khairan<br>SI-SANTRI - pinggirX.com</div>
+                    </div>
+                </body>
+                </html>
+            `);
+            win.document.close();
+        }
+
+        async function cekLaporanShift() {
+            const pin = document.getElementById('admin_pin').value;
+            const bendahara = document.getElementById('nama_bendahara').value;
+            if (pin !== PIN_RAHASIA) return alert("Masukkan PIN untuk cek laporan!");
+            try {
+                const response = await fetch(`${API_URL}?action=report&bendahara=${encodeURIComponent(bendahara)}`);
+                const result = await response.json();
+                if (result.total !== undefined) {
+                    cetakLaporanShift(bendahara, result.total);
+                } else {
+                    alert("Data tidak ditemukan.");
+                }
+            } catch (e) { alert("Gagal terhubung ke server."); }
+        }
+
+        function cetakLaporanShift(bendahara, total) {
+            const tgl = new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+            const waktu = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            const win = window.open('', '_blank');
+            win.document.write(`
+                <html>
+                <head>
+                    <style>
+                        body { font-family: 'Segoe UI', sans-serif; color: #333; padding: 20px; }
+                        .report-box { width: 300px; border: 2px solid #006400; padding: 20px; border-radius: 15px; margin: auto; }
+                        .header { text-align: center; margin-bottom: 20px; border-bottom: 1px dashed #ddd; padding-bottom: 10px; }
+                        .summary-box { background: #006400; color: white; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 15px; }
+                        .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f2f2f2; font-size: 11px; }
+                        .footer { text-align: center; margin-top: 25px; font-size: 9px; color: #888; }
+                    </style>
+                </head>
+                <body onload="window.print(); window.onafterprint = function(){ window.close(); }">
+                    <div class="report-box">
+                        <div class="header"><h1>Laporan Kas Shift</h1><p>PP. Miftahul Ulum Terisi</p></div>
+                        <div class="summary-box"><div>Total Kas Diterima (Cash)</div><div style="font-size:20px; font-weight:900">Rp ${Number(total).toLocaleString('id-ID')}</div></div>
+                        <div class="info-row"><span>Petugas</span><strong>${bendahara}</strong></div>
+                        <div class="info-row"><span>Tanggal Rekap</span><strong>${tgl}</strong></div>
+                        <div class="info-row"><span>Waktu</span><strong>${waktu} WIB</strong></div>
+                        <div class="footer">Dicetak otomatis oleh SI-SANTRI<br>pinggirX.com</div>
+                    </div>
+                </body>
+                </html>
+            `);
+            win.document.close();
+        }
+    </script>
+</body>
+</html>
